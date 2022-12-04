@@ -1,0 +1,1 @@
+INSERT INTO uporabniki (ime, priimek, email, username) VALUES ('Janez', 'Novak', 'jn123@gmail.com', 'jn123');
