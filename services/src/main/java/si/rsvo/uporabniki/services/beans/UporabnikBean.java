@@ -38,6 +38,44 @@ public class UporabnikBean {
 
     }
 
+    public Uporabnik getUporabnikById(Integer id) {
+
+        UporabnikEntity uporabnikEntity = em.find(UporabnikEntity.class, id);
+
+        if (uporabnikEntity == null) {
+            throw new NotFoundException();
+        }
+
+        Uporabnik uporabnik = UporabnikConverter.toDto(uporabnikEntity);
+
+        return uporabnik;
+    }
+
+
+    @Timed
+    public List<Uporabnik> getUporabnikByUsername(String username) {
+
+        TypedQuery<UporabnikEntity> query = em.createNamedQuery(
+                "UporabnikEntity.getByUsername", UporabnikEntity.class);
+
+        query.setParameter("uporabnikUsername", username);
+
+        List<UporabnikEntity> resultList = query.getResultList();
+
+        System.out.println("resultList: ");
+        for(UporabnikEntity up : resultList) {
+            System.out.println(up.getId());
+            System.out.println(up.getIme());
+            System.out.println(up.getPriimek());
+            System.out.println(up.getUsername());
+            System.out.println(up.getEmail());
+        }
+
+        return resultList.stream().map(UporabnikConverter::toDto).collect(Collectors.toList());
+
+    }
+
+
     /*
     @Timed
     public List<UporabnikoviIzdelkiMetadata> getUporabnikoviIzdelkiMetadataFilter(UriInfo uriInfo) {

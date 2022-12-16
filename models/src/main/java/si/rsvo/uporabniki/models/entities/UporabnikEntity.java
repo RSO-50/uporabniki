@@ -9,6 +9,8 @@ import java.time.Instant;
         {
                 @NamedQuery(name = "UporabnikEntity.getAll",
                         query = "SELECT up FROM UporabnikEntity up"),
+                @NamedQuery(name = "UporabnikEntity.getByUsername",
+                        query = "SELECT up FROM UporabnikEntity up WHERE up.username = :uporabnikUsername")
         })
 
 public class UporabnikEntity {

@@ -52,6 +52,35 @@ public class UporabnikResource {
         return Response.status(Response.Status.OK).entity(uporabniki).build();
     }
 
+    @Operation(description = "Get uporabnik by id", summary = "Get uporabnik by id")
+    @APIResponses({
+            @APIResponse(responseCode = "200",
+                    description = "List of uporabniki",
+                    content = @Content(schema = @Schema(implementation = Uporabnik.class)),
+                    headers = {@Header(name = "X-Total-Count", description = "Number of objects in list")}
+            )})
+    @GET
+    @Path("/{id}")
+    public Response getUporabnikById(@Parameter(description = "Uporabnik ID.", required = true)
+                                         @PathParam("id") Integer id) {
+
+        Uporabnik uporabnik = uporabnikBean.getUporabnikById(id);
+
+        return Response.status(Response.Status.OK).entity(uporabnik).build();
+    }
+
+    @GET
+    @Path("/byUsername/{username}")
+    public Response getUporabnikByUsername(@Parameter(description = "Get uporabnik by username.", required = true)
+                                     @PathParam("username") String username) {
+
+        List<Uporabnik> uporabnik = uporabnikBean.getUporabnikByUsername(username);
+
+        Uporabnik result = uporabnik.get(0);
+
+        return Response.status(Response.Status.OK).entity(result).build();
+    }
+
     /*
     @Operation(description = "Get metadata for an id.", summary = "Get metadata for an id")
     @APIResponses({
