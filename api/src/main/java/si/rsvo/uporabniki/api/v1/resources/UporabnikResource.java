@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import si.rsvo.uporabniki.services.beans.UporabnikBean;
 import si.rsvo.uporabniki.lib.Uporabnik;
+import si.rsvo.uporabniki.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -32,7 +33,8 @@ import java.util.logging.Logger;
 public class UporabnikResource {
 
     private Logger log = Logger.getLogger(UporabnikResource.class.getName());
-
+    @Inject
+    private RestProperties restProperties;
     @Inject
     private UporabnikBean uporabnikBean;
 
@@ -79,6 +81,15 @@ public class UporabnikResource {
         Uporabnik result = uporabnik.get(0);
 
         return Response.status(Response.Status.OK).entity(result).build();
+    }
+
+    @POST
+    @Path("break")
+    public Response makeUnhealthy() {
+
+        restProperties.setBroken(true);
+
+        return Response.status(Response.Status.OK).build();
     }
 
     /*
