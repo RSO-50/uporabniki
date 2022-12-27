@@ -13,8 +13,8 @@ spec:
         app: uporabniki
     spec:
       containers:
-        - image: rsoskupina50/uporabnikova-shramba-izdelkov:2022-12-04-14-24-07
-          name: uporabnikovi
+        - image: rsoskupina50/uporabniki:2022-12-19-18-32-32
+          name: uporabniki
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
               value: jdbc:postgresql://mouse.db.elephantsql.com/auevkfam
@@ -46,7 +46,7 @@ kind: Service
 metadata:
   name: uporabniki
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 8080
       protocol: TCP

@@ -78,9 +78,9 @@ public class UporabnikResource {
 
         List<Uporabnik> uporabnik = uporabnikBean.getUporabnikByUsername(username);
 
-        Uporabnik result = uporabnik.get(0);
+        Integer id = uporabnik.get(0).getId();
 
-        return Response.status(Response.Status.OK).entity(result).build();
+        return Response.status(Response.Status.OK).build();
     }
 
     @POST
