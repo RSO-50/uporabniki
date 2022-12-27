@@ -73,14 +73,14 @@ public class UporabnikResource {
 
     @GET
     @Path("/byUsername/{username}")
-    public Response getUporabnikByUsername(@Parameter(description = "Get uporabnik by username.", required = true)
+    public Integer getUporabnikByUsername(@Parameter(description = "Get uporabnik by username.", required = true)
                                      @PathParam("username") String username) {
 
         List<Uporabnik> uporabnik = uporabnikBean.getUporabnikByUsername(username);
 
         Integer id = uporabnik.get(0).getId();
 
-        return Response.status(Response.Status.OK).build();
+        return id;
     }
 
     @POST
