@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 @Path("/uporabniki")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@CrossOrigin(allowOrigin = "*")
 public class UporabnikResource {
 
     private Logger log = Logger.getLogger(UporabnikResource.class.getName());
@@ -48,7 +49,6 @@ public class UporabnikResource {
             )})
     @GET
     @Path("/")
-    @CrossOrigin(allowOrigin="*")
     public Response getUporabniki() {
 
         List<Uporabnik> uporabniki = uporabnikBean.getUporabniki();
