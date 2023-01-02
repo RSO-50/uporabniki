@@ -1,5 +1,6 @@
 package si.rsvo.uporabniki.api.v1.resources;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.kumuluz.ee.logs.cdi.Log;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -47,6 +48,7 @@ public class UporabnikResource {
             )})
     @GET
     @Path("/")
+    @CrossOrigin(allowOrigin="*")
     public Response getUporabniki() {
 
         List<Uporabnik> uporabniki = uporabnikBean.getUporabniki();
@@ -73,10 +75,15 @@ public class UporabnikResource {
 
     @GET
     @Path("/byUsername/{username}")
+
     public Integer getUporabnikByUsername(@Parameter(description = "Get uporabnik by username.", required = true)
                                      @PathParam("username") String username) {
 
         List<Uporabnik> uporabnik = uporabnikBean.getUporabnikByUsername(username);
+
+        if(uporabnik.size() == 0) {
+            return -1;
+        }
 
         Integer id = uporabnik.get(0).getId();
 
