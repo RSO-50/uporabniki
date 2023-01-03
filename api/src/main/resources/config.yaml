@@ -13,6 +13,11 @@ kumuluzee:
       username: dbuser
       password: postgres
       max-pool-size: 20
+  cors-filter:
+    annotations:
+      uporabniki:
+        allow-origin: "*"
+        allow-subdomains: true
   health:
     checks:
       data-source-health-check:

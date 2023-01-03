@@ -22,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,7 +32,7 @@ import java.util.logging.Logger;
 @Path("/uporabniki")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@CrossOrigin(allowOrigin = "*")
+@CrossOrigin(name = "uporabniki", supportedMethods = "GET, POST, PUT, DELETE")
 public class UporabnikResource {
 
     private Logger log = Logger.getLogger(UporabnikResource.class.getName());
@@ -53,7 +54,33 @@ public class UporabnikResource {
 
         List<Uporabnik> uporabniki = uporabnikBean.getUporabniki();
 
+        System.out.println("updated");
         return Response.status(Response.Status.OK).entity(uporabniki).build();
+    }
+
+    @Operation(description = "Create uporabnik", summary = "Create uporabnik")
+    @APIResponses({
+            @APIResponse(responseCode = "201",
+                    description = "Created uporabnik"
+            )
+    })
+    @POST
+    @Path("/")
+    public Response createUporabnik(@RequestBody(
+            description = "DTO object with uporabnik.",
+            required = true, content = @Content(
+            schema = @Schema(implementation = Uporabnik.class))) Uporabnik uporabnik
+    ) {
+
+        Uporabnik ustvarjeniUporabnik = null;
+        try {
+            ustvarjeniUporabnik = uporabnikBean.createUporabnik(uporabnik);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return Response.status(Response.Status.OK).entity(ustvarjeniUporabnik).build();
     }
 
     @Operation(description = "Get uporabnik by id", summary = "Get uporabnik by id")
@@ -75,7 +102,6 @@ public class UporabnikResource {
 
     @GET
     @Path("/byUsername/{username}")
-
     public Integer getUporabnikByUsername(@Parameter(description = "Get uporabnik by username.", required = true)
                                      @PathParam("username") String username) {
 

@@ -1,22 +1,42 @@
 package si.rsvo.uporabniki.services.beans;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import si.rsvo.uporabniki.lib.Uporabnik;
 import si.rsvo.uporabniki.models.converters.UporabnikConverter;
 import si.rsvo.uporabniki.models.entities.UporabnikEntity;
+import si.rsvo.uporabniki.services.util.Celebrity;
 
 
 @RequestScoped
@@ -27,6 +47,13 @@ public class UporabnikBean {
     @Inject
     private EntityManager em;
 
+    private Client httpClient;
+
+    @PostConstruct
+    private void init() {
+        httpClient = ClientBuilder.newClient();
+    }
+
     public List<Uporabnik> getUporabniki() {
 
         TypedQuery<UporabnikEntity> query = em.createNamedQuery(
@@ -35,6 +62,46 @@ public class UporabnikBean {
         List<UporabnikEntity> resultList = query.getResultList();
 
         return resultList.stream().map(UporabnikConverter::toDto).collect(Collectors.toList());
+
+    }
+
+    public Uporabnik createUporabnik(Uporabnik uporabnik) throws IOException {
+
+        UporabnikEntity uporabnikEntity = UporabnikConverter.toEntity(uporabnik);
+
+
+        // call API check for celebrity name
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("https://api.api-ninjas.com/v1/celebrity?min_net_worth=1");
+        request.setHeader("X-Api-Key", "PHrxDsBI1fm20+0JSR4Eiw==1Ll1KdcxqDcKICPR");
+        HttpResponse response = client.execute(request);
+        String responseBody = EntityUtils.toString(response.getEntity());
+
+        ObjectMapper mapper = new ObjectMapper();
+        Celebrity[] celebrities = mapper.readValue(responseBody, Celebrity[].class);
+
+        for (Celebrity celebrity : celebrities) {
+            System.out.println(celebrity.getName());
+        }
+
+
+
+        try {
+            beginTx();
+            em.persist(uporabnikEntity);
+            commitTx();
+        }
+        catch (Exception e) {
+            rollbackTx();
+        }
+
+        if (uporabnikEntity.getId() == null) {
+            throw new RuntimeException("Entity was not persisted");
+        }
+
+
+        return UporabnikConverter.toDto(uporabnikEntity);
 
     }
 
