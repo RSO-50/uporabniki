@@ -71,7 +71,7 @@ public class UporabnikBean {
 
 
         // call API check for celebrity name
-
+        /*
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet("https://api.api-ninjas.com/v1/celebrity?min_net_worth=1");
         request.setHeader("X-Api-Key", "PHrxDsBI1fm20+0JSR4Eiw==1Ll1KdcxqDcKICPR");
@@ -84,7 +84,7 @@ public class UporabnikBean {
         for (Celebrity celebrity : celebrities) {
             System.out.println(celebrity.getName());
         }
-
+        */
 
 
         try {

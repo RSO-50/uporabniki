@@ -1,5 +1,6 @@
 package si.rsvo.uporabniki.api.v1.resources;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import si.rsvo.uporabniki.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 @Path("/demo")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@CrossOrigin()
 public class DemoResource {
 
 
