@@ -13,7 +13,7 @@ spec:
         app: uporabniki
     spec:
       containers:
-        - image: rsoskupina50/uporabniki:2023-01-03-22-05-30
+        - image: rsoskupina50/uporabniki:2023-01-03-23-22-36
           name: uporabniki
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
